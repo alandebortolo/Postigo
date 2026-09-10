@@ -26,5 +26,5 @@ check:
 
 zip: app
 	rm -f dist/Postigo.zip
-	COPYFILE_DISABLE=1 ditto -c -k --keepParent dist/Postigo.app dist/Postigo.zip
+	cd dist && zip -r -X Postigo.zip Postigo.app
 	@ls -lh dist/Postigo.zip
