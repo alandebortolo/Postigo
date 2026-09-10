@@ -26,7 +26,7 @@ final class StatusItemController: NSObject {
     private var snapshot = MenuSnapshot(
         mode: .idle,
         usedBytes: 0,
-        quotaBytes: 5_000_000_000,
+        quotaBytes: 10_000_000_000,
         warn: false,
         cameraOK: true,
         motionNow: false,

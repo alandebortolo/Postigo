@@ -23,7 +23,7 @@ macOS está amarrada nele.
 
 - Default `~/Movies/Postigo` (fora do iCloud Documents). Se `~/Movies/DeskCam` já existir e
   a pasta nova não, usa a antiga. Pasta configurável.
-- Cota 5 GB, retenção 48 h.
+- Cota 10 GB, retenção 48 h.
 - Apaga o mais antigo sem movimento primeiro. Clipe `_motion` / `_preroll` e JPEG não saem
   para abrir cota — se só restar protegido acima da cota, a gravação para.
 - 720p 15 fps HEVC (fallback H.264) ~800 kbps.

@@ -37,7 +37,7 @@ Mouse não acorda. Se alguém mexer no mouse enquanto você está fora, o Postig
 | Gravando | Webcam contínua, 720p, sem áudio. |
 | Ausente | Tela preta. Só guarda quando tem movimento (uns 20 s antes e 10 s depois). Qualquer tecla acorda. |
 
-Arquivos em `~/Movies/Postigo`. Teto de 5 GB: o lixo sai primeiro, clipe com movimento não. Se o disco encher de evidência, ele para em vez de apagar.
+Arquivos em `~/Movies/Postigo`. Teto de 10 GB: o lixo sai primeiro, clipe com movimento não. Se o disco encher de evidência, ele para em vez de apagar.
 
 O LED verde da FaceTime **acende sempre** que está gravando. No MacBook a câmera está na tampa: fechar a tampa desliga.
 

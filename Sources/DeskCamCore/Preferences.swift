@@ -22,7 +22,7 @@ public struct Preferences: Codable, Equatable {
     public var recordingsRootPath: String?
 
     public init(
-        quotaBytes: Int64 = 5_000_000_000,
+        quotaBytes: Int64 = 10_000_000_000,
         retentionHours: Int = 48,
         width: Int = 1280,
         height: Int = 720,
@@ -87,6 +87,7 @@ public struct Preferences: Codable, Equatable {
 
 public final class PreferencesStore {
     public static let defaultsKey = "deskcam.preferences.v1"
+    public static let quota10GBMigrationKey = "deskcam.quota.migrated.10gb"
     private let defaults: UserDefaults
 
     public init(defaults: UserDefaults = .standard) {
@@ -98,7 +99,15 @@ public final class PreferencesStore {
             return Preferences()
         }
         do {
-            return try JSONDecoder().decode(Preferences.self, from: data)
+            var prefs = try JSONDecoder().decode(Preferences.self, from: data)
+            if defaults.object(forKey: Self.quota10GBMigrationKey) == nil {
+                if prefs.quotaBytes == 5_000_000_000 {
+                    prefs.quotaBytes = 10_000_000_000
+                    save(prefs)
+                }
+                defaults.set(true, forKey: Self.quota10GBMigrationKey)
+            }
+            return prefs
         } catch {
             return Preferences()
         }

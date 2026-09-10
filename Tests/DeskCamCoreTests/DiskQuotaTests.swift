@@ -120,6 +120,19 @@ final class DiskQuotaTests: XCTestCase {
         XCTAssertEqual(p.sanitizedPIN, "9876")
     }
 
+    func testDefaultQuotaIsTenGB() {
+        XCTAssertEqual(Preferences().quotaBytes, 10_000_000_000)
+    }
+
+    func testStoreMigratesOldFiveGBDefaultOnce() {
+        let defaults = UserDefaults(suiteName: "deskcam.test.\(UUID().uuidString)")!
+        let store = PreferencesStore(defaults: defaults)
+        store.save(Preferences(quotaBytes: 5_000_000_000, pin: "1234"))
+        XCTAssertEqual(store.load().quotaBytes, 10_000_000_000)
+        store.save(Preferences(quotaBytes: 5_000_000_000, pin: "1234"))
+        XCTAssertEqual(store.load().quotaBytes, 5_000_000_000)
+    }
+
     func testStoreKeepsPINUntilFourDigits() {
         let defaults = UserDefaults(suiteName: "deskcam.test.\(UUID().uuidString)")!
         let store = PreferencesStore(defaults: defaults)
