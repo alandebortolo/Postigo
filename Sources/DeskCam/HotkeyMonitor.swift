@@ -30,7 +30,7 @@ final class HotkeyMonitor {
         if status == noErr {
             hotKeyRef = ref
         } else {
-            NSLog("DeskCam: atalho ocupado (%d)", status)
+            NSLog("Postigo: atalho ocupado (%d)", status)
         }
     }
 

@@ -31,7 +31,7 @@ final class EventLogWindowController {
             backing: .buffered,
             defer: false
         )
-        window.title = "DeskCam — eventos"
+        window.title = "\(Brand.name) - eventos"
         window.isReleasedWhenClosed = false
 
         let scroll = NSScrollView(frame: window.contentView?.bounds ?? .zero)

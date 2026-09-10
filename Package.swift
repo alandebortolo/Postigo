@@ -5,7 +5,7 @@ let package = Package(
     name: "DeskCam",
     platforms: [.macOS(.v14)],
     products: [
-        .executable(name: "DeskCam", targets: ["DeskCam"]),
+        .executable(name: "Postigo", targets: ["DeskCam"]),
         .library(name: "DeskCamCore", targets: ["DeskCamCore"]),
     ],
     targets: [

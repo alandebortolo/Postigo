@@ -1,22 +1,25 @@
-.PHONY: test build app install run check
+.PHONY: test build app install run check icons
 
 test:
 	swift test
 
 build:
-	swift build -c release --product DeskCam
+	swift build -c release --product Postigo
 
-app: build
+icons:
+	./scripts/make-icons.sh
+
+app: icons build
 	./scripts/package.sh
 
 install: app
 	mkdir -p "$(HOME)/Applications"
-	rm -rf "$(HOME)/Applications/DeskCam.app"
-	cp -R dist/DeskCam.app "$(HOME)/Applications/DeskCam.app"
-	@echo "instalado em ~/Applications/DeskCam.app"
+	rm -rf "$(HOME)/Applications/Postigo.app" "$(HOME)/Applications/DeskCam.app"
+	cp -R dist/Postigo.app "$(HOME)/Applications/Postigo.app"
+	@echo "instalado em ~/Applications/Postigo.app"
 
 run: install
-	open "$(HOME)/Applications/DeskCam.app"
+	open "$(HOME)/Applications/Postigo.app"
 
 check:
 	./check.sh

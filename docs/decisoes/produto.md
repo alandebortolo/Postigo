@@ -1,10 +1,14 @@
-# DeskCam — o que o app é
+# Postigo — o que o app é
 
 Decisão de 2026-09-09. App interno, um Mac, sem distribuição.
+Nome e ícone: 2026-09-09 (postigo = a portinhola na porta por onde se olha quem chegou).
 
 Não é câmera invisível. O LED verde da FaceTime acende sempre que a sessão de captura está
 ligada; no MacBook fechar a tampa desliga a câmera. O produto é câmera de presença na mesa:
 menu bar, cota de disco, modo ausente que finge o Mac dormido.
+
+O bundle id continua `br.com.designmaster.deskcam` de propósito: permissão de Câmera do
+macOS está amarrada nele.
 
 ## Modos
 
@@ -17,7 +21,8 @@ menu bar, cota de disco, modo ausente que finge o Mac dormido.
 
 ## Disco
 
-- Default `~/Movies/DeskCam` (fora do iCloud Documents). Pasta configurável.
+- Default `~/Movies/Postigo` (fora do iCloud Documents). Se `~/Movies/DeskCam` já existir e
+  a pasta nova não, usa a antiga. Pasta configurável.
 - Cota 5 GB, retenção 48 h.
 - Apaga o mais antigo sem movimento primeiro. Clipe `_motion` / `_preroll` e JPEG não saem
   para abrir cota — se só restar protegido acima da cota, a gravação para.

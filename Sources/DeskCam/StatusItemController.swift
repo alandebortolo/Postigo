@@ -37,7 +37,7 @@ final class StatusItemController: NSObject {
     override init() {
         item = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         super.init()
-        item.button?.toolTip = "DeskCam"
+        item.button?.toolTip = Brand.name
         applyIcon()
         rebuild()
     }
@@ -49,18 +49,7 @@ final class StatusItemController: NSObject {
     }
 
     private func applyIcon() {
-        let name: String
-        switch snapshot.mode {
-        case .idle:
-            name = snapshot.warn ? "exclamationmark.triangle" : "video"
-        case .recording:
-            name = "record.circle"
-        case .away:
-            name = "moon.fill"
-        }
-        let image = NSImage(systemSymbolName: name, accessibilityDescription: "DeskCam")
-        image?.isTemplate = true
-        item.button?.image = image
+        item.button?.image = PostigoMark.statusImage(mode: snapshot.mode, warn: snapshot.warn)
     }
 
     private func rebuild() {

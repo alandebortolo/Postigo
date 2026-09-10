@@ -108,6 +108,11 @@ final class DiskQuotaTests: XCTestCase {
         XCTAssertFalse(PowerState(isAC: false, percent: nil).shouldStop(thresholdPercent: 10))
     }
 
+    func testBrandName() {
+        XCTAssertEqual(Brand.name, "Postigo")
+        XCTAssertEqual(Brand.folderName, "Postigo")
+    }
+
     func testPreferencesPINSanitizes() {
         var p = Preferences(pin: "12ab")
         XCTAssertEqual(p.sanitizedPIN, "1234")

@@ -10,14 +10,14 @@ final class SleepAssertion {
             IOPMAssertionCreateWithName(
                 kIOPMAssertionTypeNoIdleSleep as CFString,
                 IOPMAssertionLevel(kIOPMAssertionLevelOn),
-                "DeskCam recording" as CFString,
+                "Postigo recording" as CFString,
                 &assertionID
             )
         }
         if activity == nil {
             activity = ProcessInfo.processInfo.beginActivity(
                 options: [.userInitiated, .idleSystemSleepDisabled, .idleDisplaySleepDisabled],
-                reason: "DeskCam recording"
+                reason: "Postigo recording"
             )
         }
     }

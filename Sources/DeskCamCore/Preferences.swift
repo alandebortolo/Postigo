@@ -74,8 +74,7 @@ public struct Preferences: Codable, Equatable {
     }
 
     public static func defaultRoot() -> URL {
-        FileManager.default.homeDirectoryForCurrentUser
-            .appendingPathComponent("Movies/DeskCam", isDirectory: true)
+        Brand.defaultRoot()
     }
 
     public func resolvedRoot() -> URL {

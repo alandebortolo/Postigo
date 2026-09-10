@@ -1,9 +1,10 @@
-# DeskCam
+# Postigo
 
 Câmera de presença no menu bar do Mac. Interno, um usuário, sem loja.
 
-Três modos: parado, gravando, ausente. No ausente a tela fica preta, a webcam segue
-gravando, e só o atalho `Ctrl+Opt+Cmd+Shift+U` + PIN acorda e para.
+O nome é o postigo: a portinhola na porta por onde se olha quem chegou. No ausente a
+tela fica preta, a webcam segue gravando, e só o atalho `Ctrl+Opt+Cmd+Shift+U` + PIN
+acorda e para.
 
 O LED verde da FaceTime acende enquanto grava. No MacBook a câmera está na tampa:
 fechar a tampa desliga a captura.
@@ -12,11 +13,11 @@ fechar a tampa desliga a captura.
 
 ```bash
 ./check.sh          # testes + smoke + .app
-make install        # copia para ~/Applications/DeskCam.app
+make install        # copia para ~/Applications/Postigo.app
 make run
 ```
 
-Primeira abertura: Ajustes > Privacidade e segurança > Câmera > DeskCam. O atalho de
+Primeira abertura: Ajustes > Privacidade e segurança > Câmera > Postigo. O atalho de
 acordar não precisa de Acessibilidade. Sem Acessibilidade, o log de mouse no ausente
 pode ficar mudo; o atalho e o PIN continuam valendo.
 
@@ -24,7 +25,7 @@ pode ficar mudo; o atalho e o PIN continuam valendo.
 
 | Item | Valor |
 |---|---|
-| Pasta | `~/Movies/DeskCam` |
+| Pasta | `~/Movies/Postigo` (usa `~/Movies/DeskCam` se essa já existir) |
 | Cota | 5 GB |
 | Retenção | 48 h |
 | Vídeo | 720p 15 fps HEVC, sem áudio |

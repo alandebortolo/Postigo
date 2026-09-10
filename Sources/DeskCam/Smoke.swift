@@ -59,7 +59,7 @@ enum Smoke {
             fputs("smoke failed: \(failures)\n", stderr)
             exit(1)
         }
-        fputs("DeskCam smoke ok\n", stdout)
+        fputs("Postigo smoke ok\n", stdout)
         exit(0)
     }
 }

@@ -10,7 +10,7 @@ enum LoginItem {
                 try SMAppService.mainApp.unregister()
             }
         } catch {
-            NSLog("DeskCam login item: %@", error.localizedDescription)
+            NSLog("Postigo login item: %@", error.localizedDescription)
         }
     }
 }

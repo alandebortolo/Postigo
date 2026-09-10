@@ -1,4 +1,5 @@
 import AppKit
+import DeskCamCore
 
 final class PinPanel: NSObject, NSTextFieldDelegate {
     var onSubmit: ((String) -> Void)?
@@ -52,7 +53,7 @@ final class PinPanel: NSObject, NSTextFieldDelegate {
         )
         panel.isFloatingPanel = true
         panel.level = NSWindow.Level(rawValue: Int(CGWindowLevelForKey(.screenSaverWindow)) + 1)
-        panel.title = "DeskCam"
+        panel.title = Brand.name
         panel.isOpaque = true
         panel.backgroundColor = NSColor(calibratedWhite: 0.12, alpha: 1)
         panel.hidesOnDeactivate = false

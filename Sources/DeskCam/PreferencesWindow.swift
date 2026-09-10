@@ -36,7 +36,7 @@ final class PreferencesWindowController: NSObject {
             )
             let hosting = NSHostingController(rootView: root)
             let window = NSWindow(contentViewController: hosting)
-            window.title = "DeskCam"
+            window.title = Brand.name
             window.styleMask = [.titled, .closable]
             window.setContentSize(NSSize(width: 440, height: 560))
             window.isReleasedWhenClosed = false

@@ -5,15 +5,17 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>pt-BR</string>
 	<key>CFBundleExecutable</key>
-	<string>DeskCam</string>
+	<string>Postigo</string>
 	<key>CFBundleIdentifier</key>
 	<string>br.com.designmaster.deskcam</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>DeskCam</string>
+	<string>Postigo</string>
 	<key>CFBundleDisplayName</key>
-	<string>DeskCam</string>
+	<string>Postigo</string>
+	<key>CFBundleIconFile</key>
+	<string>AppIcon</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -27,7 +29,7 @@
 	<key>NSHighResolutionCapable</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>O DeskCam grava a webcam da sua mesa nos modos Gravando e Ausente.</string>
+	<string>O Postigo grava a webcam da sua mesa nos modos Gravando e Ausente.</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
 </dict>

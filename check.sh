@@ -2,11 +2,14 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 swift test
-swift build -c release --product DeskCam
-BIN="$(swift build -c release --show-bin-path)/DeskCam"
+swift build -c release --product Postigo
+BIN="$(swift build -c release --show-bin-path)/Postigo"
 "$BIN" --smoke
+./scripts/make-icons.sh
 ./scripts/package.sh >/dev/null
-test -x dist/DeskCam.app/Contents/MacOS/DeskCam
-plutil -extract NSCameraUsageDescription raw dist/DeskCam.app/Contents/Info.plist >/dev/null
-plutil -extract LSUIElement raw dist/DeskCam.app/Contents/Info.plist | grep -q true
+test -x dist/Postigo.app/Contents/MacOS/Postigo
+test -f dist/Postigo.app/Contents/Resources/AppIcon.icns
+plutil -extract NSCameraUsageDescription raw dist/Postigo.app/Contents/Info.plist | grep -q Postigo
+plutil -extract CFBundleDisplayName raw dist/Postigo.app/Contents/Info.plist | grep -q Postigo
+plutil -extract LSUIElement raw dist/Postigo.app/Contents/Info.plist | grep -q true
 echo "check ok"
