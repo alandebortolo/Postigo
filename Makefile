@@ -23,3 +23,8 @@ run: install
 
 check:
 	./check.sh
+
+zip: app
+	rm -f dist/Postigo.zip
+	ditto -c -k --keepParent dist/Postigo.app dist/Postigo.zip
+	@ls -lh dist/Postigo.zip
