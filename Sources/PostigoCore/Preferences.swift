@@ -86,8 +86,8 @@ public struct Preferences: Codable, Equatable {
 }
 
 public final class PreferencesStore {
-    public static let defaultsKey = "deskcam.preferences.v1"
-    public static let quota10GBMigrationKey = "deskcam.quota.migrated.10gb"
+    public static let defaultsKey = "postigo.preferences.v1"
+    public static let quota10GBMigrationKey = "postigo.quota.migrated.10gb"
     private let defaults: UserDefaults
 
     public init(defaults: UserDefaults = .standard) {

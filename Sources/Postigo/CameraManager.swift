@@ -9,7 +9,7 @@ struct CameraInfo: Equatable {
 }
 
 final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegate {
-    let queue = DispatchQueue(label: "br.com.designmaster.deskcam.capture")
+    let queue = DispatchQueue(label: "br.com.designmaster.postigo.capture")
     var onFrame: ((CVPixelBuffer, CMTime) -> Void)?
     var onError: ((String) -> Void)?
 

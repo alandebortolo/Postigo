@@ -15,6 +15,6 @@ cp "$ROOT/Resources/AppIcon.icns" "$DIST/Contents/Resources/AppIcon.icns"
 printf 'APPLPSTG' > "$DIST/Contents/PkgInfo"
 chmod +x "$DIST/Contents/MacOS/Postigo"
 
-codesign --force --sign - --identifier br.com.designmaster.deskcam "$DIST" >/dev/null
+codesign --force --sign - --identifier br.com.designmaster.postigo "$DIST" >/dev/null
 
 echo "$DIST"

@@ -111,6 +111,8 @@ final class DiskQuotaTests: XCTestCase {
     func testBrandName() {
         XCTAssertEqual(Brand.name, "Postigo")
         XCTAssertEqual(Brand.folderName, "Postigo")
+        XCTAssertEqual(Brand.bundleID, "br.com.designmaster.postigo")
+        XCTAssertTrue(Brand.defaultRoot().path.hasSuffix("/Movies/Postigo"))
     }
 
     func testPreferencesPINSanitizes() {

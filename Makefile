@@ -14,7 +14,7 @@ app: icons build
 
 install: app
 	mkdir -p "$(HOME)/Applications"
-	rm -rf "$(HOME)/Applications/Postigo.app" "$(HOME)/Applications/DeskCam.app"
+	rm -rf "$(HOME)/Applications/Postigo.app"
 	cp -R dist/Postigo.app "$(HOME)/Applications/Postigo.app"
 	@echo "instalado em ~/Applications/Postigo.app"
 

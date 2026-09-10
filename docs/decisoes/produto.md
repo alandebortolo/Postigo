@@ -7,10 +7,8 @@ Não é câmera invisível. O LED verde da FaceTime acende sempre que a sessão 
 ligada; no MacBook fechar a tampa desliga a câmera. O produto é câmera de presença na mesa:
 menu bar, cota de disco, modo ausente que finge o Mac dormido.
 
-O bundle id continua `br.com.designmaster.deskcam` de propósito: permissão de Câmera do
-macOS está amarrada nele. Módulos Swift e pastas: `Postigo` / `PostigoCore` (2026-09-10).
-Chaves de preferência e pasta legada `~/Movies/DeskCam` também ficam, senão perde o que
-já estava gravado.
+Bundle id `br.com.designmaster.postigo`. Ninguém instalou ainda, então não há
+permissão de Câmera nem pasta antiga para preservar (2026-09-10).
 
 ## Modos
 
@@ -23,8 +21,7 @@ já estava gravado.
 
 ## Disco
 
-- Default `~/Movies/Postigo` (fora do iCloud Documents). Se `~/Movies/DeskCam` já existir e
-  a pasta nova não, usa a antiga. Pasta configurável.
+- Default `~/Movies/Postigo` (fora do iCloud Documents). Pasta configurável.
 - Cota 10 GB, retenção 48 h.
 - Apaga o mais antigo sem movimento primeiro. Clipe `_motion` / `_preroll` e JPEG não saem
   para abrir cota — se só restar protegido acima da cota, a gravação para.

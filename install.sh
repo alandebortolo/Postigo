@@ -52,13 +52,12 @@ ${ZIP_URL}"
 fi
 
 killall Postigo 2>/dev/null || true
-killall DeskCam 2>/dev/null || true
 sleep 0.3
 
 rm -rf "${APP}"
 ditto "${src}" "${APP}"
 xattr -cr "${APP}" 2>/dev/null || true
-codesign --force --sign - --identifier br.com.designmaster.deskcam "${APP}" >/dev/null 2>&1 || true
+codesign --force --sign - --identifier br.com.designmaster.postigo "${APP}" >/dev/null 2>&1 || true
 
 [[ -x "${APP}/Contents/MacOS/Postigo" ]] || die "A cópia falhou. ${APP} não é executável."
 

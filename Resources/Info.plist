@@ -7,7 +7,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Postigo</string>
 	<key>CFBundleIdentifier</key>
-	<string>br.com.designmaster.deskcam</string>
+	<string>br.com.designmaster.postigo</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
