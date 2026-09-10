@@ -1,3 +1,4 @@
+import CoreVideo
 import Foundation
 import DeskCamCore
 
@@ -53,6 +54,13 @@ enum Smoke {
             if s.event == .started { sawStart = true }
         }
         check(sawStart, "motion-start")
+        var topInk = 0
+        var bottomInk = 0
+        let stampOK = stampSitsUprightAtBottom(topInk: &topInk, bottomInk: &bottomInk)
+        if !stampOK {
+            fputs("timestamp ink top=\(topInk) bottom=\(bottomInk)\n", stderr)
+        }
+        check(stampOK, "timestamp-bottom")
 
         try? FileManager.default.removeItem(at: dir)
         if failures > 0 {
@@ -61,5 +69,60 @@ enum Smoke {
         }
         fputs("Postigo smoke ok\n", stdout)
         exit(0)
+    }
+
+    /// White frame + overlay: ink must land in the lower half (pixel-buffer y grows downward).
+    private static func stampSitsUprightAtBottom(topInk: inout Int, bottomInk: inout Int) -> Bool {
+        var buffer: CVPixelBuffer?
+        let attrs: [CFString: Any] = [
+            kCVPixelBufferIOSurfacePropertiesKey: [:] as CFDictionary,
+        ]
+        let status = CVPixelBufferCreate(
+            kCFAllocatorDefault,
+            640,
+            160,
+            kCVPixelFormatType_32BGRA,
+            attrs as CFDictionary,
+            &buffer
+        )
+        guard status == kCVReturnSuccess, let buffer else { return false }
+        CVPixelBufferLockBaseAddress(buffer, [])
+        let width = CVPixelBufferGetWidth(buffer)
+        let height = CVPixelBufferGetHeight(buffer)
+        let bpr = CVPixelBufferGetBytesPerRow(buffer)
+        if let base = CVPixelBufferGetBaseAddress(buffer) {
+            let p = base.bindMemory(to: UInt8.self, capacity: bpr * height)
+            for y in 0..<height {
+                for x in 0..<width {
+                    let i = y * bpr + x * 4
+                    p[i] = 255
+                    p[i + 1] = 255
+                    p[i + 2] = 255
+                    p[i + 3] = 255
+                }
+            }
+        }
+        CVPixelBufferUnlockBaseAddress(buffer, [])
+        TimestampOverlay.draw(on: buffer, now: Date(timeIntervalSince1970: 1_746_000_000))
+
+        CVPixelBufferLockBaseAddress(buffer, .readOnly)
+        defer { CVPixelBufferUnlockBaseAddress(buffer, .readOnly) }
+        guard let base = CVPixelBufferGetBaseAddress(buffer) else { return false }
+        let p = base.bindMemory(to: UInt8.self, capacity: bpr * height)
+        for y in 0..<height {
+            var rowInk = 0
+            for x in 0..<width {
+                let i = y * bpr + x * 4
+                if p[i] < 200 || p[i + 1] < 200 || p[i + 2] < 200 {
+                    rowInk += 1
+                }
+            }
+            if y < height / 2 {
+                topInk += rowInk
+            } else {
+                bottomInk += rowInk
+            }
+        }
+        return bottomInk > 200 && bottomInk > topInk * 4
     }
 }

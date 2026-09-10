@@ -1,4 +1,5 @@
-import AppKit
+import CoreGraphics
+import CoreText
 import CoreVideo
 import Foundation
 
@@ -29,25 +30,35 @@ enum TimestampOverlay {
             bitmapInfo: CGBitmapInfo.byteOrder32Little.rawValue | CGImageAlphaInfo.premultipliedFirst.rawValue
         ) else { return }
 
-        let ns = NSGraphicsContext(cgContext: ctx, flipped: true)
-        NSGraphicsContext.saveGraphicsState()
-        NSGraphicsContext.current = ns
+        ctx.saveGState()
 
-        let text = formatter.string(from: now) as NSString
+        let text = formatter.string(from: now) as CFString
         let fontSize = max(16, CGFloat(width) / 55)
-        let font = NSFont.monospacedSystemFont(ofSize: fontSize, weight: .medium)
-        let attrs: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: NSColor.white,
+        let font = CTFontCreateWithName("Menlo-Bold" as CFString, fontSize, nil)
+        let white = CGColor(gray: 1, alpha: 1)
+        let attrs: [CFString: Any] = [
+            kCTFontAttributeName: font,
+            kCTForegroundColorAttributeName: white,
         ]
-        let size = text.size(withAttributes: attrs)
+        let attributed = CFAttributedStringCreate(kCFAllocatorDefault, text, attrs as CFDictionary)!
+        let line = CTLineCreateWithAttributedString(attributed)
+        var ascent: CGFloat = 0
+        var descent: CGFloat = 0
+        var leading: CGFloat = 0
+        let lineWidth = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, &leading))
+        let lineHeight = ascent + descent
         let pad: CGFloat = 8
         let x: CGFloat = 14
-        let y = CGFloat(height) - size.height - 18
-        NSColor.black.withAlphaComponent(0.55).setFill()
-        NSBezierPath(roundedRect: NSRect(x: x - pad, y: y - 4, width: size.width + pad * 2, height: size.height + 8), xRadius: 4, yRadius: 4).fill()
-        text.draw(at: NSPoint(x: x, y: y), withAttributes: attrs)
+        let y: CGFloat = 18
 
-        NSGraphicsContext.restoreGraphicsState()
+        ctx.setFillColor(gray: 0, alpha: 0.55)
+        let badge = CGRect(x: x - pad, y: y - descent - 4, width: lineWidth + pad * 2, height: lineHeight + 8)
+        ctx.addPath(CGPath(roundedRect: badge, cornerWidth: 4, cornerHeight: 4, transform: nil))
+        ctx.fillPath()
+
+        ctx.textMatrix = .identity
+        ctx.textPosition = CGPoint(x: x, y: y)
+        CTLineDraw(line, ctx)
+        ctx.restoreGState()
     }
 }
