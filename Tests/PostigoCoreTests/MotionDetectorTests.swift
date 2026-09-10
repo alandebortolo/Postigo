@@ -1,5 +1,5 @@
 import XCTest
-@testable import DeskCamCore
+@testable import PostigoCore
 
 final class MotionDetectorTests: XCTestCase {
     func testWarmupThenStillIsQuiet() {

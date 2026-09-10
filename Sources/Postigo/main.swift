@@ -1,5 +1,5 @@
 import AppKit
-import DeskCamCore
+import PostigoCore
 
 if CommandLine.arguments.contains("--smoke") {
     Smoke.run()

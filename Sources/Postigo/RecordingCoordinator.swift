@@ -1,6 +1,6 @@
 import AVFoundation
 import CoreVideo
-import DeskCamCore
+import PostigoCore
 import Foundation
 
 enum RecordPolicy: Equatable {

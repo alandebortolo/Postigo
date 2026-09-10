@@ -12,7 +12,7 @@ mkdir -p "$DIST/Contents/MacOS" "$DIST/Contents/Resources"
 cp "$BIN" "$DIST/Contents/MacOS/Postigo"
 cp "$ROOT/Resources/Info.plist" "$DIST/Contents/Info.plist"
 cp "$ROOT/Resources/AppIcon.icns" "$DIST/Contents/Resources/AppIcon.icns"
-printf 'APPLDSCM' > "$DIST/Contents/PkgInfo"
+printf 'APPLPSTG' > "$DIST/Contents/PkgInfo"
 chmod +x "$DIST/Contents/MacOS/Postigo"
 
 codesign --force --sign - --identifier br.com.designmaster.deskcam "$DIST" >/dev/null

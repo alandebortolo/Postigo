@@ -32,13 +32,13 @@ final class SegmentWriter {
             outputSettings = settings(.h264)
         }
         guard writer.canApply(outputSettings: outputSettings, forMediaType: .video) else {
-            throw NSError(domain: "DeskCam", code: 10, userInfo: [NSLocalizedDescriptionKey: "Encoder HEVC/H.264 indisponível"])
+            throw NSError(domain: "Postigo", code: 10, userInfo: [NSLocalizedDescriptionKey: "Encoder HEVC/H.264 indisponível"])
         }
 
         let input = AVAssetWriterInput(mediaType: .video, outputSettings: outputSettings)
         input.expectsMediaDataInRealTime = true
         guard writer.canAdd(input) else {
-            throw NSError(domain: "DeskCam", code: 11, userInfo: [NSLocalizedDescriptionKey: "Não deu para criar a trilha de vídeo"])
+            throw NSError(domain: "Postigo", code: 11, userInfo: [NSLocalizedDescriptionKey: "Não deu para criar a trilha de vídeo"])
         }
         writer.add(input)
 
@@ -52,7 +52,7 @@ final class SegmentWriter {
         )
 
         guard writer.startWriting() else {
-            throw writer.error ?? NSError(domain: "DeskCam", code: 12, userInfo: [NSLocalizedDescriptionKey: "AVAssetWriter recusou start"])
+            throw writer.error ?? NSError(domain: "Postigo", code: 12, userInfo: [NSLocalizedDescriptionKey: "AVAssetWriter recusou start"])
         }
 
         self.writer = writer

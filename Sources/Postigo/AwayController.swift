@@ -1,5 +1,5 @@
 import AppKit
-import DeskCamCore
+import PostigoCore
 
 final class AwayController {
     var onWake: (() -> Void)?

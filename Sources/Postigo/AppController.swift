@@ -1,6 +1,6 @@
 import AppKit
 import AVFoundation
-import DeskCamCore
+import PostigoCore
 import Foundation
 
 final class AppController: NSObject {

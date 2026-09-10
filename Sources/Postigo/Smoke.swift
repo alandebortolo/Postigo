@@ -1,6 +1,6 @@
 import CoreVideo
 import Foundation
-import DeskCamCore
+import PostigoCore
 
 enum Smoke {
     static func run() {
@@ -14,7 +14,7 @@ enum Smoke {
             }
         }
 
-        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("deskcam-smoke-\(UUID().uuidString)", isDirectory: true)
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent("postigo-smoke-\(UUID().uuidString)", isDirectory: true)
         let layout = StorageLayout(root: dir)
         do { try layout.ensureFolders() } catch {
             fputs("FAIL folders \(error)\n", stderr)

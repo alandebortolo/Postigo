@@ -1,5 +1,5 @@
 import AppKit
-import DeskCamCore
+import PostigoCore
 
 enum PostigoMark {
     static func statusImage(mode: RunMode, warn: Bool) -> NSImage {

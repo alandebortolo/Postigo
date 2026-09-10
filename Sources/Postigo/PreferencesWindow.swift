@@ -1,6 +1,6 @@
 import AVFoundation
 import AppKit
-import DeskCamCore
+import PostigoCore
 import SwiftUI
 
 final class PreferencesWindowController: NSObject, NSWindowDelegate {

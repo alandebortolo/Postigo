@@ -8,7 +8,9 @@ ligada; no MacBook fechar a tampa desliga a câmera. O produto é câmera de pre
 menu bar, cota de disco, modo ausente que finge o Mac dormido.
 
 O bundle id continua `br.com.designmaster.deskcam` de propósito: permissão de Câmera do
-macOS está amarrada nele.
+macOS está amarrada nele. Módulos Swift e pastas: `Postigo` / `PostigoCore` (2026-09-10).
+Chaves de preferência e pasta legada `~/Movies/DeskCam` também ficam, senão perde o que
+já estava gravado.
 
 ## Modos
 

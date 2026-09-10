@@ -68,13 +68,13 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
 
         guard let device = Self.device(cameraID: cameraID) else {
             session.commitConfiguration()
-            throw NSError(domain: "DeskCam", code: 1, userInfo: [NSLocalizedDescriptionKey: "Nenhuma câmera encontrada"])
+            throw NSError(domain: "Postigo", code: 1, userInfo: [NSLocalizedDescriptionKey: "Nenhuma câmera encontrada"])
         }
 
         let input = try AVCaptureDeviceInput(device: device)
         guard session.canAddInput(input) else {
             session.commitConfiguration()
-            throw NSError(domain: "DeskCam", code: 2, userInfo: [NSLocalizedDescriptionKey: "Não deu para abrir a câmera"])
+            throw NSError(domain: "Postigo", code: 2, userInfo: [NSLocalizedDescriptionKey: "Não deu para abrir a câmera"])
         }
         session.addInput(input)
         currentInput = input
@@ -84,7 +84,7 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         output.setSampleBufferDelegate(self, queue: queue)
         guard session.canAddOutput(output) else {
             session.commitConfiguration()
-            throw NSError(domain: "DeskCam", code: 3, userInfo: [NSLocalizedDescriptionKey: "Não deu para ligar a saída de vídeo"])
+            throw NSError(domain: "Postigo", code: 3, userInfo: [NSLocalizedDescriptionKey: "Não deu para ligar a saída de vídeo"])
         }
         session.addOutput(output)
 
@@ -108,7 +108,7 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         currentCameraID = cameraID
         if !running {
             currentCameraID = nil
-            throw NSError(domain: "DeskCam", code: 4, userInfo: [NSLocalizedDescriptionKey: "A sessão da câmera não iniciou"])
+            throw NSError(domain: "Postigo", code: 4, userInfo: [NSLocalizedDescriptionKey: "A sessão da câmera não iniciou"])
         }
     }
 

@@ -1,5 +1,5 @@
 import AppKit
-import DeskCamCore
+import PostigoCore
 
 struct MenuSnapshot {
     var mode: RunMode

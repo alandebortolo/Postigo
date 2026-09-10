@@ -1,5 +1,5 @@
 import XCTest
-@testable import DeskCamCore
+@testable import PostigoCore
 
 final class DiskQuotaTests: XCTestCase {
     func testUnderQuotaKeepsEverything() {
@@ -125,7 +125,7 @@ final class DiskQuotaTests: XCTestCase {
     }
 
     func testStoreMigratesOldFiveGBDefaultOnce() {
-        let defaults = UserDefaults(suiteName: "deskcam.test.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "postigo.test.\(UUID().uuidString)")!
         let store = PreferencesStore(defaults: defaults)
         store.save(Preferences(quotaBytes: 5_000_000_000, pin: "1234"))
         XCTAssertEqual(store.load().quotaBytes, 10_000_000_000)
@@ -134,7 +134,7 @@ final class DiskQuotaTests: XCTestCase {
     }
 
     func testStoreKeepsPINUntilFourDigits() {
-        let defaults = UserDefaults(suiteName: "deskcam.test.\(UUID().uuidString)")!
+        let defaults = UserDefaults(suiteName: "postigo.test.\(UUID().uuidString)")!
         let store = PreferencesStore(defaults: defaults)
         store.save(Preferences(pin: "1234"))
         store.save(Preferences(pin: "9"))
