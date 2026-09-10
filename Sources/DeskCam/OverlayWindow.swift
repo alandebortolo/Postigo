@@ -60,5 +60,7 @@ final class OverlayController {
             w.orderFrontRegardless()
             return w
         }
+        NSApp.activate(ignoringOtherApps: true)
+        windows.first?.makeKeyAndOrderFront(nil)
     }
 }

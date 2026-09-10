@@ -3,8 +3,8 @@
 Câmera de presença no menu bar do Mac. Interno, um usuário, sem loja.
 
 O nome é o postigo: a portinhola na porta por onde se olha quem chegou. No ausente a
-tela fica preta, a webcam segue gravando, e só o atalho `Ctrl+Opt+Cmd+Shift+U` + PIN
-acorda e para.
+tela fica preta, a webcam segue gravando, e qualquer tecla acorda e para. Mouse não
+acorda: só marca quem mexeu.
 
 O LED verde da FaceTime acende enquanto grava. No MacBook a câmera está na tampa:
 fechar a tampa desliga a captura.
@@ -17,9 +17,9 @@ make install        # copia para ~/Applications/Postigo.app
 make run
 ```
 
-Primeira abertura: Ajustes > Privacidade e segurança > Câmera > Postigo. O atalho de
-acordar não precisa de Acessibilidade. Sem Acessibilidade, o log de mouse no ausente
-pode ficar mudo; o atalho e o PIN continuam valendo.
+Primeira abertura: Ajustes > Privacidade e segurança > Câmera > Postigo. Preferências
+mostram a câmera ao vivo. Sem Acessibilidade, o log de mouse no ausente pode ficar mudo;
+qualquer tecla ainda acorda.
 
 ## Defaults
 
@@ -31,7 +31,7 @@ pode ficar mudo; o atalho e o PIN continuam valendo.
 | Vídeo | 720p 15 fps HEVC, sem áudio |
 | Manual | guarda mesmo sem movimento, segmentos de 5 min |
 | Ausente | só movimento, segmentos de 20 s, pré-roll + trailing 10 s |
-| PIN | `1234` (muda em Preferências) |
+| Acordar | qualquer tecla |
 | Abrir no login | desligado (e, se ligar, sobe parado) |
 
 Failsafe: bateria ≤ 10% ou cota cheia só de clipes protegidos tira o overlay e para.

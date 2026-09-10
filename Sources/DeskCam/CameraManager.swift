@@ -13,10 +13,11 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
     var onFrame: ((CVPixelBuffer, CMTime) -> Void)?
     var onError: ((String) -> Void)?
 
-    private let session = AVCaptureSession()
+    let session = AVCaptureSession()
     private let output = AVCaptureVideoDataOutput()
     private var currentInput: AVCaptureDeviceInput?
-    private var running = false
+    private var currentCameraID: String?
+    private(set) var running = false
 
     func listCameras() -> [CameraInfo] {
         let discovery = AVCaptureDevice.DiscoverySession(
@@ -44,6 +45,11 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         AVCaptureDevice.requestAccess(for: .video) { granted in
             DispatchQueue.main.async { completion(granted) }
         }
+    }
+
+    func ensureRunning(cameraID: String?, width: Int, height: Int, fps: Int32) throws {
+        if running, currentCameraID == cameraID { return }
+        try start(cameraID: cameraID, width: width, height: height, fps: fps)
     }
 
     func start(cameraID: String?, width: Int, height: Int, fps: Int32) throws {
@@ -99,7 +105,9 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
         session.commitConfiguration()
         session.startRunning()
         running = session.isRunning
+        currentCameraID = cameraID
         if !running {
+            currentCameraID = nil
             throw NSError(domain: "DeskCam", code: 4, userInfo: [NSLocalizedDescriptionKey: "A sessão da câmera não iniciou"])
         }
     }
@@ -109,6 +117,7 @@ final class CameraManager: NSObject, AVCaptureVideoDataOutputSampleBufferDelegat
             session.stopRunning()
         }
         running = false
+        currentCameraID = nil
     }
 
     func captureOutput(

@@ -4,26 +4,20 @@ import DeskCamCore
 final class AwayController {
     var onWake: (() -> Void)?
     var onIntrusion: (() -> Void)?
-    var onPinFail: (() -> Void)?
 
     private let overlay = OverlayController()
-    private let pin = PinPanel()
     private let brightness: BrightnessController
     private let assertion = SleepAssertion()
     private let flagURL: URL
     private var globalMonitor: Any?
     private var localMonitor: Any?
-    private var pinCode: String = "1234"
-    private var failedAttempts = 0
     private var lastIntrusionLog = Date.distantPast
+    private var waking = false
     private(set) var isAway = false
 
     init(flagURL: URL) {
         self.flagURL = flagURL
         brightness = BrightnessController(flagURL: flagURL)
-        pin.onSubmit = { [weak self] value in
-            self?.handlePIN(value)
-        }
     }
 
     func recoverIfNeeded() -> Bool {
@@ -34,21 +28,16 @@ final class AwayController {
         return existed
     }
 
-    func enter(pin: String) {
+    func enter() {
         guard !isAway else { return }
         isAway = true
-        pinCode = pin
-        failedAttempts = 0
+        waking = false
         assertion.take()
         NSApp.presentationOptions = [.hideDock, .hideMenuBar, .disableAppleMenu]
         overlay.show()
         brightness.dimAll()
         NSCursor.hide()
         installMonitors()
-        HotkeyMonitor.shared.onPressed = { [weak self] in
-            self?.showPIN()
-        }
-        HotkeyMonitor.shared.start()
     }
 
     func exit() {
@@ -57,17 +46,10 @@ final class AwayController {
             return
         }
         isAway = false
-        HotkeyMonitor.shared.stop()
-        HotkeyMonitor.shared.onPressed = nil
+        waking = false
         removeMonitors()
-        pin.hide()
         restoreChrome()
         assertion.release()
-    }
-
-    func showPIN() {
-        guard isAway else { return }
-        pin.show()
     }
 
     private func restoreChrome() {
@@ -77,36 +59,29 @@ final class AwayController {
         NSCursor.unhide()
     }
 
-    private func handlePIN(_ value: String) {
-        if value == pinCode {
-            pin.hide()
-            onWake?()
-            return
+    private func installMonitors() {
+        removeMonitors()
+        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDown, .rightMouseDown, .keyDown, .scrollWheel]) { [weak self] event in
+            self?.handle(event)
         }
-        failedAttempts += 1
-        pin.shake()
-        onPinFail?()
-        if failedAttempts >= 5 {
-            onIntrusion?()
+        localMonitor = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved, .leftMouseDown, .rightMouseDown, .keyDown, .scrollWheel]) { [weak self] event in
+            self?.handle(event)
+            return event
         }
     }
 
-    private func installMonitors() {
-        removeMonitors()
-        globalMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.mouseMoved, .leftMouseDown, .rightMouseDown, .keyDown, .scrollWheel]) { [weak self] _ in
-            self?.noteIntrusion()
+    private func handle(_ event: NSEvent) {
+        if event.type == .keyDown {
+            wake()
+            return
         }
-        localMonitor = NSEvent.addLocalMonitorForEvents(matching: [.mouseMoved, .leftMouseDown, .rightMouseDown, .keyDown, .scrollWheel]) { [weak self] event in
-            if event.type == .keyDown, self?.pin.isVisible == true {
-                return event
-            }
-            if event.type == .mouseMoved || event.type == .leftMouseDown || event.type == .rightMouseDown || event.type == .scrollWheel {
-                self?.noteIntrusion()
-            } else if event.type == .keyDown, self?.pin.isVisible == false {
-                self?.noteIntrusion()
-            }
-            return event
-        }
+        noteIntrusion()
+    }
+
+    private func wake() {
+        guard isAway, !waking else { return }
+        waking = true
+        onWake?()
     }
 
     private func removeMonitors() {

@@ -21,6 +21,7 @@ final class RecordingCoordinator {
     private var prefs: Preferences
     private var policy: RecordPolicy = .keepAll
     private var running = false
+    private var previewActive = false
     private var rotating = false
     private var hadMotionInSegment = false
     private var pendingPreRoll: URL?
@@ -41,6 +42,7 @@ final class RecordingCoordinator {
     }
 
     var captureQueue: DispatchQueue { camera.queue }
+    var captureSession: AVCaptureSession { camera.session }
 
     func listCameras() -> [CameraInfo] { camera.listCameras() }
 
@@ -90,8 +92,39 @@ final class RecordingCoordinator {
         }
     }
 
+    func startPreview(prefs: Preferences) {
+        captureQueue.async { [weak self] in
+            guard let self else { return }
+            self.previewActive = true
+            do {
+                try self.camera.ensureRunning(
+                    cameraID: prefs.cameraUniqueID,
+                    width: prefs.width,
+                    height: prefs.height,
+                    fps: prefs.fps
+                )
+            } catch {
+                self.onError?(error.localizedDescription)
+            }
+        }
+    }
+
+    func stopPreview() {
+        captureQueue.async { [weak self] in
+            guard let self else { return }
+            self.previewActive = false
+            if !self.running {
+                self.camera.stop()
+            }
+        }
+    }
+
     private func _start(layout: StorageLayout, prefs: Preferences, policy: RecordPolicy) {
-        if running { _stop() }
+        if running {
+            closeSegment(keepIfMotionOnly: hadMotionInSegment)
+            discardUnusedPreRoll()
+            running = false
+        }
         self.layout = layout
         self.prefs = prefs
         self.policy = policy
@@ -102,7 +135,7 @@ final class RecordingCoordinator {
         )
         do {
             try layout.ensureFolders()
-            try camera.start(
+            try camera.ensureRunning(
                 cameraID: prefs.cameraUniqueID,
                 width: prefs.width,
                 height: prefs.height,
@@ -122,12 +155,12 @@ final class RecordingCoordinator {
     }
 
     private func _stop() {
-        guard running || writer.url != nil else {
-            camera.stop()
-            return
-        }
+        let wasRecording = running || writer.url != nil
         running = false
-        camera.stop()
+        if !previewActive {
+            camera.stop()
+        }
+        guard wasRecording else { return }
         closeSegment(keepIfMotionOnly: hadMotionInSegment)
         discardUnusedPreRoll()
         detector.reset()

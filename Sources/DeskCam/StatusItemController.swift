@@ -31,7 +31,7 @@ final class StatusItemController: NSObject {
         cameraOK: true,
         motionNow: false,
         lastError: nil,
-        hotkeyLabel: "Ctrl+Opt+Cmd+Shift+U"
+        hotkeyLabel: "qualquer tecla"
     )
 
     override init() {

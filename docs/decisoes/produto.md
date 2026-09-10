@@ -16,8 +16,8 @@ macOS está amarrada nele.
 - Gravando: webcam contínua em segmentos. Default da gravação manual: guarda mesmo sem movimento.
 - Ausente: overlay preto em todos os displays, brilho 0, Dock/menu escondidos, Mac não dorme.
   Default: só promove arquivo se houver movimento (pré-roll de um segmento ~20 s + trailing 10 s).
-  Mouse/teclado não acordam; marcam intrusão e forçam guardar o clipe.
-  Acordar: Ctrl+Opt+Cmd+Shift+U + PIN de 4 dígitos. Aí para a gravação.
+  Mouse não acorda; marca intrusão e força guardar o clipe.
+  Qualquer tecla acorda e para a gravação (2026-09-10: o atalho+PIN saiu porque atrapalhava).
 
 ## Disco
 

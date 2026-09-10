@@ -1,4 +1,5 @@
 import AppKit
+import AVFoundation
 import DeskCamCore
 import Foundation
 
@@ -49,6 +50,7 @@ final class AppController: NSObject {
         if mode == .away {
             away.exit()
         }
+        recorder.stopPreview()
         if mode != .idle {
             recorder.stopAndWait()
         }
@@ -104,23 +106,44 @@ final class AppController: NSObject {
 
         away.onWake = { [weak self] in self?.wakeFromAway() }
         away.onIntrusion = { [weak self] in
-            self?.log.append(LogEvent(kind: .intrusion, detail: "mouse/teclado no ausente"))
+            self?.log.append(LogEvent(kind: .intrusion, detail: "mouse no ausente"))
             self?.recorder.markIntrusion()
-        }
-        away.onPinFail = { [weak self] in
-            self?.log.append(LogEvent(kind: .pinFail, detail: ""))
         }
 
         prefsWindow = PreferencesWindowController(
             store: store,
             cameras: { [weak self] in self?.recorder.listCameras() ?? [] },
-            onChange: { [weak self] prefs in
-                self?.prefs = prefs
-                LoginItem.apply(prefs.openAtLogin)
-                self?.relocateIfNeeded()
-                self?.rebuildMenu()
+            session: { [weak self] in
+                self?.recorder.captureSession ?? AVCaptureSession()
             },
-            onPickFolder: { [weak self] in self?.pickFolder() }
+            onChange: { [weak self] prefs in
+                guard let self else { return }
+                self.prefs = prefs
+                LoginItem.apply(prefs.openAtLogin)
+                self.relocateIfNeeded()
+                self.rebuildMenu()
+                if self.prefsWindow.isOpen {
+                    self.recorder.startPreview(prefs: prefs)
+                }
+            },
+            onPickFolder: { [weak self] in self?.pickFolder() },
+            onPreviewStart: { [weak self] prefs in
+                guard let self else { return }
+                self.recorder.requestAccess { granted in
+                    if granted {
+                        self.cameraOK = true
+                        self.lastError = nil
+                        self.recorder.startPreview(prefs: prefs)
+                    } else {
+                        self.cameraOK = false
+                        self.lastError = "Câmera recusada em Ajustes > Privacidade"
+                    }
+                    self.rebuildMenu()
+                }
+            },
+            onPreviewStop: { [weak self] in
+                self?.recorder.stopPreview()
+            }
         )
         logWindow = EventLogWindowController { [weak self] in
             self?.log.formatted(limit: 300) ?? ""
@@ -163,15 +186,15 @@ final class AppController: NSObject {
                 self.recorder.start(layout: self.layout, prefs: self.prefs, policy: policy)
             }
             self.mode = .away
-            self.away.enter(pin: self.prefs.sanitizedPIN)
-            self.log.append(LogEvent(kind: .awayStart, detail: HotkeyMonitor.shared.comboLabel))
+            self.away.enter()
+            self.log.append(LogEvent(kind: .awayStart, detail: "qualquer tecla"))
             self.rebuildMenu()
         }
     }
 
     private func wakeFromAway() {
         away.exit()
-        log.append(LogEvent(kind: .awayWake, detail: "PIN ok"))
+        log.append(LogEvent(kind: .awayWake, detail: "tecla"))
         recorder.stop { [weak self] in
             DispatchQueue.main.async {
                 self?.sleep.release()
@@ -240,11 +263,8 @@ final class AppController: NSObject {
             away = AwayController(flagURL: layout.awayFlag)
             away.onWake = { [weak self] in self?.wakeFromAway() }
             away.onIntrusion = { [weak self] in
-                self?.log.append(LogEvent(kind: .intrusion, detail: "mouse/teclado no ausente"))
+                self?.log.append(LogEvent(kind: .intrusion, detail: "mouse no ausente"))
                 self?.recorder.markIntrusion()
-            }
-            away.onPinFail = { [weak self] in
-                self?.log.append(LogEvent(kind: .pinFail, detail: ""))
             }
         }
     }
@@ -277,7 +297,7 @@ final class AppController: NSObject {
             cameraOK: cameraOK,
             motionNow: motionNow,
             lastError: lastError,
-            hotkeyLabel: HotkeyMonitor.shared.comboLabel
+            hotkeyLabel: "qualquer tecla"
         ))
     }
 }

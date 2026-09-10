@@ -1,24 +1,36 @@
+import AVFoundation
 import AppKit
 import DeskCamCore
 import SwiftUI
 
-final class PreferencesWindowController: NSObject {
+final class PreferencesWindowController: NSObject, NSWindowDelegate {
     private var window: NSWindow?
     private let store: PreferencesStore
     private var cameras: () -> [CameraInfo]
+    private var session: () -> AVCaptureSession
     private var onChange: (Preferences) -> Void
     private var onPickFolder: () -> Void
+    private var onPreviewStart: (Preferences) -> Void
+    private var onPreviewStop: () -> Void
+
+    var isOpen: Bool { window?.isVisible == true }
 
     init(
         store: PreferencesStore,
         cameras: @escaping () -> [CameraInfo],
+        session: @escaping () -> AVCaptureSession,
         onChange: @escaping (Preferences) -> Void,
-        onPickFolder: @escaping () -> Void
+        onPickFolder: @escaping () -> Void,
+        onPreviewStart: @escaping (Preferences) -> Void,
+        onPreviewStop: @escaping () -> Void
     ) {
         self.store = store
         self.cameras = cameras
+        self.session = session
         self.onChange = onChange
         self.onPickFolder = onPickFolder
+        self.onPreviewStart = onPreviewStart
+        self.onPreviewStop = onPreviewStop
     }
 
     func show() {
@@ -26,6 +38,7 @@ final class PreferencesWindowController: NSObject {
             let root = PreferencesView(
                 prefs: store.load(),
                 cameras: cameras(),
+                session: session(),
                 onSave: { [weak self] prefs in
                     self?.store.save(prefs)
                     self?.onChange(prefs)
@@ -38,23 +51,38 @@ final class PreferencesWindowController: NSObject {
             let window = NSWindow(contentViewController: hosting)
             window.title = Brand.name
             window.styleMask = [.titled, .closable]
-            window.setContentSize(NSSize(width: 440, height: 560))
+            window.setContentSize(NSSize(width: 460, height: 760))
             window.isReleasedWhenClosed = false
+            window.delegate = self
             self.window = window
         }
+        onPreviewStart(store.load())
         NSApp.activate(ignoringOtherApps: true)
         window?.makeKeyAndOrderFront(nil)
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        onPreviewStop()
     }
 }
 
 struct PreferencesView: View {
     @State var prefs: Preferences
     let cameras: [CameraInfo]
+    let session: AVCaptureSession
     let onSave: (Preferences) -> Void
     let onPickFolder: () -> Void
 
     var body: some View {
-        Form {
+        VStack(alignment: .leading, spacing: 12) {
+            CameraPreviewView(session: session)
+                .frame(maxWidth: .infinity, minHeight: 230, idealHeight: 230, maxHeight: 260)
+                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 8, style: .continuous)
+                        .stroke(Color.secondary.opacity(0.25), lineWidth: 1)
+                )
+            Form {
             Section("Câmera") {
                 Picker("Dispositivo", selection: $prefs.cameraUniqueID) {
                     Text("Padrão").tag(String?.none)
@@ -92,15 +120,16 @@ struct PreferencesView: View {
                 }
             }
             Section("Ausente") {
-                SecureField("PIN de 4 dígitos", text: $prefs.pin)
-                Text("Atalho para acordar: Ctrl+Opt+Cmd+Shift+U")
+                Text("Qualquer tecla acorda e para a gravação. Mouse não acorda: só marca quem mexeu.")
                     .font(.caption)
                     .foregroundStyle(.secondary)
+                    .fixedSize(horizontal: false, vertical: true)
                 Toggle("Abrir no login (parado)", isOn: $prefs.openAtLogin)
+            }
             }
         }
         .padding(16)
-        .frame(minWidth: 400, minHeight: 520)
+        .frame(minWidth: 440, minHeight: 720)
         .onChange(of: prefs) { _, newValue in
             onSave(newValue)
         }
