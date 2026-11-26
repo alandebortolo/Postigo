@@ -30,6 +30,11 @@ public enum RecordingNamer {
         }
     }
 
+    /// Only names this app writes; the folder is user-chosen and may hold other files.
+    public static func isOwned(fileName: String) -> Bool {
+        fileName.range(of: #"^(\d{4}-\d{2}-\d{2}T\d{6}(_motion|_preroll)?\.mp4|\d{4}-\d{2}-\d{2}T\d{6}\.jpg|seg-[0-9A-Fa-f-]{36}\.mp4)$"#, options: .regularExpression) != nil
+    }
+
     public static func isProtected(fileName: String) -> Bool {
         fileName.contains("_motion") || fileName.contains("_preroll") || fileName.hasSuffix(".jpg")
     }

@@ -90,7 +90,8 @@ public enum DiskQuota {
             ) else { continue }
             for url in items {
                 let values = try? url.resourceValues(forKeys: [.fileSizeKey, .contentModificationDateKey, .isRegularFileKey])
-                guard values?.isRegularFile == true else { continue }
+                guard values?.isRegularFile == true,
+                      RecordingNamer.isOwned(fileName: url.lastPathComponent) else { continue }
                 let bytes = Int64(values?.fileSize ?? 0)
                 let modified = values?.contentModificationDate ?? Date.distantPast
                 out.append(RecordingFile(

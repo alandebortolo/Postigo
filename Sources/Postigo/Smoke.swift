@@ -25,9 +25,9 @@ enum Smoke {
         check(prefs.sanitizedPIN == "2580", "pin")
         check(RecordingNamer.isProtected(fileName: "x_motion.mp4"), "namer-protected")
 
-        let old = dir.appendingPathComponent("Recordings/old.mp4")
+        let old = dir.appendingPathComponent("Recordings/2026-01-01T000000.mp4")
         try? Data(repeating: 1, count: 400).write(to: old)
-        let motion = dir.appendingPathComponent("Recordings/now_motion.mp4")
+        let motion = dir.appendingPathComponent("Recordings/2026-01-01T000001_motion.mp4")
         try? Data(repeating: 1, count: 400).write(to: motion)
         let files = DiskQuota.scan(root: dir)
         let result = DiskQuota.enforce(

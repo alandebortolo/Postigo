@@ -72,6 +72,28 @@ final class DiskQuotaTests: XCTestCase {
         XCTAssertEqual(result.usedBytes, 100)
     }
 
+    func testScanIgnoresFilesPostigoDidNotWrite() throws {
+        let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString, isDirectory: true)
+        let layout = StorageLayout(root: dir)
+        try layout.ensureFolders()
+        defer { try? FileManager.default.removeItem(at: dir) }
+        let ours = [
+            layout.recordings.appendingPathComponent("2026-01-02T030405.mp4"),
+            layout.recordings.appendingPathComponent("2026-01-02T030405_motion.mp4"),
+            layout.recordings.appendingPathComponent("2026-01-02T030405_preroll.mp4"),
+            layout.snapshots.appendingPathComponent("2026-01-02T030405.jpg"),
+            layout.temp.appendingPathComponent("seg-\(UUID().uuidString).mp4"),
+        ]
+        let foreign = [
+            layout.recordings.appendingPathComponent("reuniao-cliente.mov"),
+            layout.recordings.appendingPathComponent("ferias.mp4"),
+            layout.snapshots.appendingPathComponent("contrato.pdf"),
+        ]
+        for url in ours + foreign { try Data([1]).write(to: url) }
+        let names = Set(DiskQuota.scan(root: dir).map(\.url.lastPathComponent))
+        XCTAssertEqual(names, Set(ours.map(\.lastPathComponent)))
+    }
+
     func testWarnAtEightyPercent() {
         let files = [file("a.mp4", bytes: 81, age: 1, protected: false)]
         let result = DiskQuota.enforce(
